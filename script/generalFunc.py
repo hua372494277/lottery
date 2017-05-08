@@ -1,15 +1,14 @@
+import os
 #data format: 2002001 2002-01-01 0 7 3
 #Time as key
 #Read into Dict: {'2002001': (0, 7, 3), ....... }
 def readFileIntoDictTimeasKey(fileName, func):
-    fread = open(fileName, 'r')
+    fRead = open(fileName, 'r')
     listR = []
-    line = "begin"
-    while line:
+
+    for line in fread:
         line = fread.readline()
-        if len(line) < 1:
-            break
-        items = line.split();
+        items = line.split()
 
         listR.append(func(items[1], items[2], items[3]))
 
@@ -81,18 +80,13 @@ def readFileIntoDictNumberasKey(fileName, func):
 
 
 #Seperate the whole file into pieces according to time (year)
-def seperateFileIntoPieces(fileName):
+def seperateFileIntoPieces(fileName, folder="3d"):
     fread = open(fileName, 'r')
     dict = {}
-    line = "begin"
     preYear = ""
     fwrite = ""
 
-    while line:
-        line = fread.readline()
-        if len(line) < 1:
-            break
-
+    for line in fread:
         items = line.split();
 
         year = items[0][:4]
@@ -101,9 +95,11 @@ def seperateFileIntoPieces(fileName):
             fwrite.close()
 
         if(preYear == "" or preYear != year):
-            fwrite = open('../' + year + '.txt', 'w')
+            #print os.path.join('..', 'data', folder, year) + '.txt'
+            fwrite = open(os.path.join('..', 'data', folder, year) + '.txt', 'w')
             preYear = year
 
+        #print items[0] + "\t" + items[2] + "\t" + items[3] + "\t" + items[4] + "\n"
         fwrite.write(items[0] + "\t" + items[2] + "\t" + items[3] + "\t" + items[4] + "\n")
 
 
@@ -133,3 +129,7 @@ def verifyZu3(item1, item2, item3):
         return True
 
     return False
+
+
+if __name__ == '__main__':
+    seperateFileIntoPieces(fileName = 'C:\\computer_science_y\\version_control\\lottery\\data\\3d.TXT')
